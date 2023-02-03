@@ -23,6 +23,12 @@ public class ProductResource {
         return productRepository.listProduct();
     }
 
+    @GET
+    @Path("/{Id}")
+    public Product getById(@PathParam("Id") Long Id){
+        return productRepository.findProduct(Id);
+    }
+
     @POST
     public Response add(Product p) {
         productRepository.createdProduct(p);
@@ -30,10 +36,22 @@ public class ProductResource {
     }
 
     @DELETE
-    public Response delete(Product p) {
-        productRepository.deleteProduct(p);
+    @Path("/{Id}")
+    public Response delete(@PathParam("Id") Long Id) {
+        productRepository.deleteProduct(productRepository.findProduct(Id));
         return Response.ok().build();
     }
+
+    @PUT
+    public Response update(Product p){
+        Product product = productRepository.findProduct(p.getId());
+        product.setCode(p.getCode());
+        product.setName(p.getName());
+        product.setDescription(p.getDescription());
+        productRepository.updateProduct(product);
+        return Response.ok().build();
+    }
+
 
 
 }
